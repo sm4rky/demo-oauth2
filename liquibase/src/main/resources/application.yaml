@@ -1,0 +1,16 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: liquibase
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/demo-email-auth
+    username: demo-auth-email
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/changelog-master.xml
