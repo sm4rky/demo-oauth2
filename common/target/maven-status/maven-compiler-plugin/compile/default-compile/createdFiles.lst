@@ -1,4 +1,0 @@
-com\demo\microservices\common\dto\EmailRequest.class
-com\demo\microservices\common\dto\UserResponse.class
-com\demo\microservices\common\dto\UserRequest.class
-com\demo\microservices\common\config\RabbitMQConfig.class
