@@ -1,3 +1,0 @@
-com\demo\microservices\email\config\RabbitMQConfig.class
-com\demo\microservices\email\listener\EmailListener.class
-com\demo\microservices\email\EmailApplication.class

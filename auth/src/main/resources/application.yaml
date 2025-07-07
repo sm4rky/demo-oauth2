@@ -4,6 +4,15 @@ server:
 spring:
   application:
     name: auth
+    security:
+  security:
+    jwt:
+      issuer: demo-auth
+      secret-key: 6G5h9eXieJf5PY1yJ9YX3sKkPZ4xXgF1yqhvPhEjVIQ=
+      access-token:
+        expiration: 1800
+      refresh-token:
+        expiration: 2592000
 
   datasource:
     url: jdbc:mysql://localhost:3306/demo-email-auth
