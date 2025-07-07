@@ -4,6 +4,8 @@ import com.demo.microservices.auth.entity.User;
 import com.demo.microservices.auth.producer.EmailProducer;
 import com.demo.microservices.auth.repository.UserRepository;
 import com.demo.microservices.common.dto.EmailRequest;
+import com.demo.microservices.common.enums.ErrorCode;
+import com.demo.microservices.common.exception.ApiException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,7 +27,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public User save(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email already in use");
+            throw new ApiException(ErrorCode.USER_EXISTED);
         }
         emailProducer.sendEmail(new EmailRequest(user.getEmail(), "Verify your email", "Click here"));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -39,6 +41,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return userRepository.findByEmail(email).orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
     }
 }

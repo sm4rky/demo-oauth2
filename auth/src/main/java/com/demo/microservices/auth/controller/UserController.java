@@ -9,6 +9,7 @@ import com.demo.microservices.common.dto.AuthResponse;
 import com.demo.microservices.common.dto.LoginRequest;
 import com.demo.microservices.common.dto.UserRequest;
 import com.demo.microservices.common.dto.UserResponse;
+import com.demo.microservices.common.entity.ApiResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,14 +33,17 @@ public class UserController {
     AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody UserRequest request) {
+    public ResponseEntity<ApiResponse<?>> register(@RequestBody UserRequest request) {
         User saved = userService.save(userMapper.toUser(request));
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userMapper.toUserResponse(saved));
+                .body(ApiResponse.<UserResponse>builder()
+                        .message("User registered successfully")
+                        .data(userMapper.toUserResponse(saved))
+                        .build());
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<ApiResponse<?>> login(@RequestBody LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
 
@@ -53,14 +57,20 @@ public class UserController {
                 refreshToken,
                 "Bearer");
         return ResponseEntity.ok()
-                .body(authResponse);
+                .body(ApiResponse.<AuthResponse>builder()
+                        .message("User login successfully")
+                        .data(authResponse)
+                        .build());
     }
 
     @GetMapping
-    public ResponseEntity<List<UserResponse>> findAllUsers() {
+    public ResponseEntity<ApiResponse<?>> findAllUsers() {
         return ResponseEntity.ok()
-                .body(userService.findAll().stream()
-                .map(userMapper::toUserResponse)
-                .toList());
+                .body(ApiResponse.<List<UserResponse>>builder()
+                        .message("Users retreived successfully")
+                        .data(userService.findAll().stream()
+                                .map(userMapper::toUserResponse)
+                                .toList())
+                        .build());
     }
 }
