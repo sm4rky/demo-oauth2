@@ -34,3 +34,6 @@ rabbitmq:
     exchange: email.exchange
     queue: email.queue
     routing-key: email.routing-key
+
+app:
+  host: http://localhost:3000

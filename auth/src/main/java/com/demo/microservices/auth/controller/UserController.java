@@ -5,10 +5,7 @@ import com.demo.microservices.auth.entity.UserPrincipal;
 import com.demo.microservices.auth.mapper.UserMapper;
 import com.demo.microservices.auth.service.JwtService;
 import com.demo.microservices.auth.service.UserService;
-import com.demo.microservices.common.dto.AuthResponse;
-import com.demo.microservices.common.dto.LoginRequest;
-import com.demo.microservices.common.dto.UserRequest;
-import com.demo.microservices.common.dto.UserResponse;
+import com.demo.microservices.common.dto.*;
 import com.demo.microservices.common.entity.ApiResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -63,11 +60,43 @@ public class UserController {
                         .build());
     }
 
+    @PutMapping("/verify")
+    public ResponseEntity<ApiResponse<?>> verify(@RequestParam String token) {
+        userService.verifyUser(token);
+        return ResponseEntity.ok(ApiResponse.builder()
+                .message("Account verified successfully")
+                .build());
+    }
+
+    @PostMapping("/password/reset/token")
+    public ResponseEntity<ApiResponse<?>> generateResetPasswordToken(@RequestParam String email) {
+        userService.generateResetPasswordToken(email);
+        return ResponseEntity.ok(ApiResponse.builder()
+                .message("Token generated successfully")
+                .build());
+    }
+
+    @GetMapping("/password/reset/verify")
+    public ResponseEntity<ApiResponse<?>> verifyResetPasswordToken(@RequestParam String token) {
+        userService.verifyResetPasswordToken(token);
+        return ResponseEntity.ok(ApiResponse.builder()
+                .message("Token verified successfully")
+                .build());
+    }
+
+    @PutMapping("/password/reset")
+    public ResponseEntity<ApiResponse<?>> resetPasswordToken(@RequestBody ResetPasswordRequest request) {
+        userService.resetPassword(request.token(), request.newPassword());
+        return ResponseEntity.ok(ApiResponse.builder()
+                .message("Password reset successfully")
+                .build());
+    }
+
     @GetMapping
     public ResponseEntity<ApiResponse<?>> findAllUsers() {
         return ResponseEntity.ok()
                 .body(ApiResponse.<List<UserResponse>>builder()
-                        .message("Users retreived successfully")
+                        .message("Users retrieved successfully")
                         .data(userService.findAll().stream()
                                 .map(userMapper::toUserResponse)
                                 .toList())

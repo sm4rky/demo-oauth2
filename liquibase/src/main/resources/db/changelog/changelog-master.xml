@@ -5,4 +5,7 @@
     <changeSet id="1" author="bao">
         <sqlFile path="db/changelog/sql/user.sql" relativeToChangelogFile="false"/>
     </changeSet>
+    <changeSet id="2" author="bao">
+        <sqlFile path="db/changelog/sql/verification_token.sql" relativeToChangelogFile="false"/>
+    </changeSet>
 </databaseChangeLog>
