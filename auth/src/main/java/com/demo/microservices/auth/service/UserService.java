@@ -20,4 +20,6 @@ public interface UserService {
     void verifyResetPasswordToken(String token);
 
     void resetPassword(String token, String newPassword);
+
+    void deleteUnverifiedUsers();
 }

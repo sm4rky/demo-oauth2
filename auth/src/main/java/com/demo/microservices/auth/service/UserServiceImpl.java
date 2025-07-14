@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -122,5 +123,12 @@ public class UserServiceImpl implements UserService{
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         verificationTokenService.deleteByToken(token);
+    }
+
+    @Override
+    @Transactional
+    @Scheduled(cron = "${app.scheduler.delete-unverified-users-cron}")
+    public void deleteUnverifiedUsers() {
+        userRepository.deleteByIsVerifiedFalseAndCreatedAtBefore(Instant.now().minus(2, ChronoUnit.DAYS));
     }
 }

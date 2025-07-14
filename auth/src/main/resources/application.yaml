@@ -37,3 +37,5 @@ rabbitmq:
 
 app:
   host: http://localhost:3000
+  scheduler:
+    delete-unverified-users-cron: "0 0 0 * * ?"
